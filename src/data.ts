@@ -10,15 +10,16 @@ players.value = await getPlayers()
 export function getPlayerInventory(value: string): number[] {
     const count = value.length / 2;
     const out = new Array(count);
-    for (let i = 0; i < count; i += 2) {
-        out[i] = parseInt(value.substring(i, i + 2), 16)
+    let index = 0
+    for (let i = 0; i < value.length; i += 2) {
+        console.log(value.substring(i, i + 2))
+        out[index++] = parseInt(value.substring(i, i + 2), 16)
     }
     return out
 }
 
 type ValueDefinition = {
     index: number;
-    value: number;
 } & InventoryDefinition
 
 export function getInventoryNamed(inventory: number[]): ValueDefinition[] {
@@ -28,14 +29,12 @@ export function getInventoryNamed(inventory: number[]): ValueDefinition[] {
         if (definition == undefined) {
             out[i] = {
                 index: i,
-                value: inventory[i],
                 name: 'UNKNOWN_' + i,
                 type: InventoryType.UNKNOWN
             }
         } else {
             out[i] = {
                 index: i,
-                value: inventory[i],
                 ...definition
             }
         }
@@ -52,6 +51,7 @@ export function getFilterInventory(inventory: ValueDefinition[], type: Inventory
             out.push(definition)
         }
     }
+    out.sort((a, b) => a.type - b.type)
     return out
 }
 
@@ -65,5 +65,7 @@ export function getFilterInventoryMultple(inventory: ValueDefinition[], types: I
             }
         }
     }
+    out.sort((a, b) => a.type - b.type)
     return out
 }
+
