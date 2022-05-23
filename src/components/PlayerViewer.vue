@@ -3,7 +3,7 @@
 import type { OtherSettings, Player } from "@/api";
 import { getPlayerOtherSettings } from "@/api";
 import { defineProps, ref } from "vue";
-import { getFilterInventory, getInventoryNamed, getPlayerInventory } from "@/data";
+import { getFilterInventory, getFilterInventoryMultple, getInventoryNamed, getPlayerInventory } from "@/data";
 import { InventoryType } from "@/constants";
 
 interface Properties {
@@ -16,33 +16,34 @@ const settings: OtherSettings = await getPlayerOtherSettings(player.value.id);
 const inventory = getPlayerInventory(player.value.settings.inventory);
 const namedInventory = getInventoryNamed(inventory);
 const characters = getFilterInventory(namedInventory, InventoryType.CHARACTER);
+const weapons = getFilterInventoryMultple(namedInventory, [
+    InventoryType.ASSAULT_RIFLE,
+    InventoryType.SNIPER_RIFLE,
+    InventoryType.SHOTGUN,
+    InventoryType.HEAVY_PISTOL,
+    InventoryType.SUB_MACHINE_GUN,
+])
 
 </script>
 <template>
-    <div>
-        <h1>Player: {{ player.displayName }}</h1>
-        <form v-on:submit.prevent="">
-            {{ player }}
-            <label>Display Name
-                <input type="text" v-model="player.displayName">
-            </label>
-            <label>Email
-                <input type="text" v-model="player.email">
-            </label>
-            <div>
-                <h1>Inventory</h1>
-                <div v-for="character in characters">
-                    <h2>{{ character.name }}</h2>
-                    <span>{{ character.value }}</span>
-                </div>
+    <form v-on:submit.prevent="" class="viewer">
+        <div class="viewer__pane">
+            <span>ID: {{ player.id }}</span>
+            <span>Email: {{ player.email }}</span>
+            <span>Display Name: {{ player.displayName }}</span>
+        </div>
+        <div class="viewer__pane">
+            <h1>Inventory</h1>
+            <div v-for="character in characters">
+                <h2>{{ character.name }}</h2>
+                <span>{{ character.value }}</span>
             </div>
-            <!--            <div>-->
-            <!--                <h2>Settings</h2>-->
-            <!--                {{ otherSettings }}-->
-            <!--            </div>-->
-        </form>
-    </div>
+        </div>
+    </form>
 </template>
 <style scoped lang="scss">
-
+.viewer {
+    display: flex;
+    flex-flow: row;
+}
 </style>

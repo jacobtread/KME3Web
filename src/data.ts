@@ -44,13 +44,25 @@ export function getInventoryNamed(inventory: number[]): ValueDefinition[] {
 }
 
 
-
 export function getFilterInventory(inventory: ValueDefinition[], type: InventoryType): ValueDefinition[] {
     const out: ValueDefinition[] = [];
     for (let i = 0; i < inventory.length; i++) {
         const definition = inventory[i]
         if (definition.type === type) {
             out.push(definition)
+        }
+    }
+    return out
+}
+
+export function getFilterInventoryMultple(inventory: ValueDefinition[], types: InventoryType[]): ValueDefinition[] {
+    const out: ValueDefinition[] = [];
+    for (let i = 0; i < inventory.length; i++) {
+        const definition = inventory[i]
+        for (let type of types) {
+            if (definition.type === type) {
+                out.push(definition)
+            }
         }
     }
     return out
