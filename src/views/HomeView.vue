@@ -4,10 +4,6 @@ import { getPlayers } from "@/api";
 import { onMounted } from "vue";
 import { players } from "@/data";
 
-onMounted(async () => {
-    players.value = await getPlayers()
-})
-
 </script>
 
 <template>
