@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost/panel/api'
+const baseUrl = '/panel/api'
 
 export interface Player {
     id: number;
@@ -8,14 +8,24 @@ export interface Player {
 }
 
 export async function getPlayers(): Promise<Player[]> {
-    const response = await fetch(`${baseUrl}/players`)
+    const response = await fetch(`${ baseUrl }/players`)
     const json = await response.json()
     return json as Player[]
 }
+
 export async function getPlayerOtherSettings(id: number): Promise<OtherSettings> {
-    const response = await fetch(`${baseUrl}/playerSettings?id=${id}`)
+    const response = await fetch(`${ baseUrl }/playerSettings?id=${ id }`)
     const json = await response.json()
     return json as OtherSettings
+}
+
+export async function updatePlayer(player: Player) {
+    const json = JSON.stringify(player)
+    await fetch(`${ baseUrl }/updatePlayer`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: json
+    })
 }
 
 export interface PlayerSettingsBase {
@@ -49,5 +59,5 @@ interface PlayerCharacter {
     weapons: string;
     weaponMods: string;
     deployed: string;
-    leveledUp:String;
+    leveledUp: String;
 }

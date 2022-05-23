@@ -5,14 +5,13 @@ import type { InventoryDefinition } from "@/constants";
 import { InventoryDefinitions, InventoryType } from "@/constants";
 
 export const players = ref<Player[]>([])
-players.value = await getPlayers()
+getPlayers().then(value => players.value = value)
 
 export function getPlayerInventory(value: string): number[] {
     const count = value.length / 2;
     const out = new Array(count);
     let index = 0
     for (let i = 0; i < value.length; i += 2) {
-        console.log(value.substring(i, i + 2))
         out[index++] = parseInt(value.substring(i, i + 2), 16)
     }
     return out

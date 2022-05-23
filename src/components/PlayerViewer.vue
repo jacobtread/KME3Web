@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import type { OtherSettings, Player, PlayerSettingsBase } from "@/api";
-import { getPlayerOtherSettings } from "@/api";
+import { getPlayerOtherSettings, updatePlayer } from "@/api";
 import { defineProps, ref } from "vue";
 import { getFilterInventory, getFilterInventoryMultple, getInventoryNamed, getPlayerInventory } from "@/data";
 import { InventoryType } from "@/constants";
@@ -42,9 +42,31 @@ function setInventoryValue(index: number, value: number) {
     inventory.value[index] = value
 }
 
+function saveAll() {
+    let out = ""
+    const inv = inventory.value
+    for (let i = 0; i < inv.length; i++) {
+        let value = inv[i].toString(16)
+        while (value.length < 2) {
+           value = '0' + value
+        }
+        out += value
+    }
+    const p = player.value
+    p.settings.inventory = out;
+    updatePlayer(p)
+    alert('Player Updated')
+}
+
+function godEverything() {
+    for (let i = 0; i < inventory.value.length; i++) {
+        inventory.value[i] = 255
+    }
+}
+
 </script>
 <template>
-    <form v-on:submit.prevent="" class="viewer">
+    <div class="viewer">
         <div class="viewer__pane">
             <RouterLink to="/" class="button">Back</RouterLink>
             <div>
@@ -64,7 +86,8 @@ function setInventoryValue(index: number, value: number) {
                     <button class="button button--max" @click="playerSettings.credits =2147483647">MAX</button>
                 </span>
                 </label>
-
+                <button @click="godEverything" class="button" style="padding: 2rem">God EVERYTHING</button>
+                <button @click="saveAll" class="button" style="padding: 2rem">Save</button>
             </div>
         </div>
         <div class="viewer__pane">
@@ -143,7 +166,7 @@ function setInventoryValue(index: number, value: number) {
                                 <td class="input__wrapper">
                                     <button class="button button--min" @click="setInventoryValue(weapon.index, 0)">MIN</button>
                                     <input class="input" type="number" v-model="inventory[weapon.index]">
-                                    <button class="button button--max" @click="setInventoryValue(weapon.index, 20)">MAX</button>
+                                    <button class="button button--max" @click="setInventoryValue(weapon.index, 10)">MAX</button>
                                     <button class="button button--god" @click="setInventoryValue(weapon.index, 255)">GOD</button>
                                 </td>
                             </tr>
@@ -164,7 +187,7 @@ function setInventoryValue(index: number, value: number) {
                                 <td class="input__wrapper">
                                     <button class="button button--min" @click="setInventoryValue(equip.index, 0)">MIN</button>
                                     <input class="input" type="number" v-model="inventory[equip.index]">
-                                    <button class="button button--max" @click="setInventoryValue(equip.index, 20)">MAX</button>
+                                    <button class="button button--max" @click="setInventoryValue(equip.index, 99)">MAX</button>
                                     <button class="button button--god" @click="setInventoryValue(equip.index, 255)">GOD</button>
                                 </td>
                             </tr>
@@ -185,7 +208,7 @@ function setInventoryValue(index: number, value: number) {
                                 <td class="input__wrapper">
                                     <button class="button button--min" @click="setInventoryValue(consumable.index, 0)">MIN</button>
                                     <input class="input" type="number" v-model="inventory[consumable.index]">
-                                    <button class="button button--max" @click="setInventoryValue(consumable.index, 20)">MAX</button>
+                                    <button class="button button--max" @click="setInventoryValue(consumable.index, 99)">MAX</button>
                                     <button class="button button--god" @click="setInventoryValue(consumable.index, 255)">GOD</button>
                                 </td>
                             </tr>
@@ -206,8 +229,7 @@ function setInventoryValue(index: number, value: number) {
                                 <td class="input__wrapper">
                                     <button class="button button--min" @click="setInventoryValue(index, 0)">MIN</button>
                                     <input type="number" class="input" v-model="inventory[index]">
-                                    <button class="button button--max" @click="setInventoryValue(index, 20)">MAX</button>
-                                    <button class="button button--god" @click="setInventoryValue(index, 255)">GOD</button>
+                                    <button class="button button--max" @click="setInventoryValue(index, 255)">MAX</button>
                                 </td>
                             </tr>
                             </tbody>
@@ -217,7 +239,7 @@ function setInventoryValue(index: number, value: number) {
             </div>
 
         </div>
-    </form>
+    </div>
 </template>
 <style scoped lang="scss">
 @import "../assets/variables";
