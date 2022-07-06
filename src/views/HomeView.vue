@@ -24,7 +24,7 @@ import { players } from "@/data";
                 <td>{{ player.id }}</td>
                 <td>{{ player.displayName }}</td>
                 <td>{{ player.email }}</td>
-                <td>{{ player.settings.credits }}</td>
+                <td>{{ player.credits }}</td>
                 <td>
                     <RouterLink :to="{name: 'edit', query: {id: player.id} }">Edit</RouterLink>
                 </td>

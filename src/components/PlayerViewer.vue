@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
-import type { OtherSettings, Player, PlayerSettingsBase } from "@/api";
+import type { OtherSettings, Player } from "@/api";
 import { getPlayerOtherSettings, updatePlayer } from "@/api";
 import { defineProps, ref } from "vue";
-import { getFilterInventory, getFilterInventoryMultple, getInventoryNamed, getPlayerInventory } from "@/data";
+import { getFilterInventory, getFilterInventoryMultple, getInventoryNamed, getPlayerInventory, players } from "@/data";
 import { InventoryType } from "@/constants";
 
 interface Properties {
@@ -12,9 +12,8 @@ interface Properties {
 
 const { player: playerProp } = defineProps<Properties>()
 const player = ref<Player>(playerProp)
-const playerSettings = ref<PlayerSettingsBase>(player.value.settings)
 const settings: OtherSettings = await getPlayerOtherSettings(player.value.id);
-const inventory = ref(getPlayerInventory(playerSettings.value.inventory));
+const inventory = ref(getPlayerInventory(player.value.inventory));
 const namedInventory = getInventoryNamed(inventory.value);
 const characters = getFilterInventory(namedInventory, InventoryType.CHARACTER);
 const weapons = getFilterInventoryMultple(namedInventory, [
@@ -53,7 +52,7 @@ function saveAll() {
         out += value
     }
     const p = player.value
-    p.settings.inventory = out;
+    p.inventory = out;
     updatePlayer(p)
     alert('Player Updated')
 }
@@ -77,13 +76,13 @@ function godEverything() {
                     <input class="input" type="email" required readonly v-model="player.email">
                 </label>
                 <label class="form-input">Display Name
-                    <input class="input" type="email" required readonly v-model="player.displayName">
+                    <input class="input" type="text" required v-model="player.displayName">
                 </label>
                 <label class="form-input">Credits
                     <span class="input__wrapper">
-                    <button class="button button--min" @click="playerSettings.credits = 0">MIN</button>
-                    <input class="input" type="number" style="margin-top: 0;" v-model="playerSettings.credits">
-                    <button class="button button--max" @click="playerSettings.credits =2147483647">MAX</button>
+                    <button class="button button--min" @click="player.credits = 0">MIN</button>
+                    <input class="input" type="number" style="margin-top: 0;" v-model="player.credits">
+                    <button class="button button--max" @click="player.credits =2147483647">MAX</button>
                 </span>
                 </label>
                 <button @click="godEverything" class="button" style="padding: 2rem">God EVERYTHING</button>

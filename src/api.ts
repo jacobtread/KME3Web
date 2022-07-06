@@ -1,10 +1,14 @@
-const baseUrl = '/panel/api'
+const baseUrl = 'http://localhost/panel/api'
 
 export interface Player {
     id: number;
     email: string;
     displayName: string;
-    settings: PlayerSettingsBase;
+    credits: number;
+    creditsSpent: number;
+    gamesPlayed: number;
+    secondsPlayed: number;
+    inventory: string;
 }
 
 export async function getPlayers(): Promise<Player[]> {
@@ -28,13 +32,6 @@ export async function updatePlayer(player: Player) {
     })
 }
 
-export interface PlayerSettingsBase {
-    credits: number;
-    creditsSpent: number;
-    gamesPlayed: number;
-    secondsPlayed: number;
-    inventory: string;
-}
 
 export type OtherSettings = Record<string, string>
 
